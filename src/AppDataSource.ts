@@ -8,7 +8,5 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PWD,
   database: process.env.DB_DATABASE,
   entities: [__dirname + "/entity/*.ts"],
-  migrations:
-    process.env.MIGRATIONS === "true" ? [__dirname + "/migrations/*.ts"] : [],
   synchronize: process.env.MIGRATIONS === "true", //Indicates if database schema should be auto created on every application launch. Be careful with this option and don't use this in production - otherwise you can lose production data.
 });
