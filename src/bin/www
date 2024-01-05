@@ -4,12 +4,12 @@
  * Module dependencies.
  */
 
-const app = require("../app");
-const debug = require("debug")("madcamp-proj2-back:server");
-const https = require("https");
+const app = require('../app');
+const debug = require('debug')('madcamp-proj2-back:server');
+const https = require('https');
 
 // var server = https.createServer(app);
-var port = normalizePort(process.env.PORT || "3000");
+var port = normalizePort(process.env.PORT || '3000');
 
 // server.listen(port, "0.0.0.0", () => {
 //   console.log("Server starting on port : " + port);
@@ -20,7 +20,7 @@ var port = normalizePort(process.env.PORT || "3000");
  */
 
 //
-app.set("port", port);
+app.set('port', port);
 app.listen(port, () => {
   console.log(`Server running on http://0.0.0.0:${port}`);
 });
@@ -64,20 +64,20 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  if (error.syscall !== "listen") {
+  if (error.syscall !== 'listen') {
     throw error;
   }
 
-  var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
-    case "EACCES":
-      console.error(bind + " requires elevated privileges");
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
       process.exit(1);
       break;
-    case "EADDRINUSE":
-      console.error(bind + " is already in use");
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
       process.exit(1);
       break;
     default:
@@ -91,6 +91,6 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-  debug("Listening on " + bind);
+  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+  debug('Listening on ' + bind);
 }
