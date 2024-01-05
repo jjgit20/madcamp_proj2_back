@@ -7,33 +7,23 @@
 const app = require("../app");
 const debug = require("debug")("madcamp-proj2-back:server");
 const https = require("https");
-const fs = require("fs");
 
-var key = fs.readFileSync(__dirname + '/../certs/selfsigned.key');
-var cert = fs.readFileSync(__dirname + '/../certs/selfsigned.crt');
-var options = {
-  key: key,
-  cert: cert
-};
-
-var server = https.createServer(options, app);
+// var server = https.createServer(app);
 var port = normalizePort(process.env.PORT || "3000");
 
-server.listen(port, '0.0.0.0', () => {
-  console.log("Server starting on port : " + port)
-});
-
+// server.listen(port, "0.0.0.0", () => {
+//   console.log("Server starting on port : " + port);
+// });
 
 /**
  * Get port from environment and store in Express.
  */
 
-// 
-// app.set("port", port);
-// app.listen(port, '0.0.0.0', () => {
-//   console.log(`Server running on https://0.0.0.0:${port}`);
-// });
-
+//
+app.set("port", port);
+app.listen(port, () => {
+  console.log(`Server running on http://0.0.0.0:${port}`);
+});
 
 // /**
 //  * Create HTTP server.
@@ -46,8 +36,8 @@ server.listen(port, '0.0.0.0', () => {
 //  */
 
 // server.listen(port);
-server.on("error", onError);
-server.on("listening", onListening);
+// server.on("error", onError);
+// server.on("listening", onListening);
 
 /**
  * Normalize a port into a number, string, or false.
