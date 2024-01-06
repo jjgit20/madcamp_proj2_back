@@ -5,10 +5,11 @@ export interface KakaoLoginRequest {
 export interface KakaoLoginResponse {
   signedUp: boolean;
   userId: number | undefined;
-  username: string | undefined;
-  nickname: string | undefined;
-  email: string | undefined;
-  image: string | undefined;
+  token: string | null;
+  // username: string | undefined;
+  // nickname: string | undefined;
+  // email: string | undefined;
+  // image: string | undefined;
 }
 
 export interface KakaoSignupRequest {
@@ -21,9 +22,12 @@ export interface KakaoSignupRequest {
 }
 
 export interface KakaoSignUpResponse {
-  userId: number;
-  username: string;
-  nickname: string;
-  email: string;
-  image: string;
+  signedUp: boolean;
+  userId: number | undefined;
+  token: string | null;
+  // userId: number;
+  // username: string;
+  // nickname: string;
+  // email: string;
+  // image: string;
 }

@@ -1,4 +1,12 @@
-import {Entity, Column, PrimaryGeneratedColumn, Unique} from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  Unique,
+  OneToMany,
+} from 'typeorm';
+
+import {Plan} from './plan.entity';
 
 @Entity('tb_users')
 @Unique(['username', 'kakaoId'])
@@ -26,4 +34,7 @@ export class User {
 
   @Column()
   image: string;
+
+  @OneToMany(() => Plan, plan => plan.userId)
+  plans: Plan[];
 }

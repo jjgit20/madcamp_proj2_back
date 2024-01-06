@@ -25,5 +25,17 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
     'unused-imports/no-unused-imports': 'warn',
+    'import/order': [
+      'warn',
+      {
+        groups: [
+          ['builtin', 'external'],
+          'internal',
+          ['parent', 'sibling', 'index'],
+        ],
+        'newlines-between': 'always',
+        alphabetize: {order: 'asc', caseInsensitive: true},
+      },
+    ],
   },
 };

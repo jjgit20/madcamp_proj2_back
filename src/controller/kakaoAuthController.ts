@@ -1,9 +1,10 @@
 import {type Request, type Response} from 'express';
-import * as kakaoAuthService from '@src/service/kakaoAuthService';
+
 import {
   type KakaoSignupRequest,
   type KakaoLoginRequest,
 } from '../dto/kakaoAuthDto';
+import * as kakaoAuthService from '../service/kakaoAuthService';
 
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {

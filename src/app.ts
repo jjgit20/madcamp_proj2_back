@@ -1,13 +1,14 @@
 import './env';
 import {type Request, type Response, type NextFunction} from 'express';
+
 import {AppDataSource} from './AppDataSource';
 
-const createError = require('http-errors');
+const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
+const createError = require('http-errors');
 const logger = require('morgan');
+const path = require('path');
 
 // connect to db
 AppDataSource.initialize()
@@ -19,8 +20,8 @@ AppDataSource.initialize()
   });
 
 const indexRouter = require('./routes/indexRouter');
-const usersRouter = require('./routes/userRouter');
 const authRouter = require('./routes/kakaoAuthRouter');
+const usersRouter = require('./routes/userRouter');
 
 const app = express();
 

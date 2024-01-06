@@ -4,3 +4,4 @@ build/
 .env.*
 *.crt
 *.key
+*.pem

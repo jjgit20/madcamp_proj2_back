@@ -1,5 +1,6 @@
 import express, {type RequestHandler} from 'express';
-import * as kakaoAuthController from '@src/controller/kakaoAuthController';
+
+import * as kakaoAuthController from '../controller/kakaoAuthController';
 
 const router = express.Router();
 
