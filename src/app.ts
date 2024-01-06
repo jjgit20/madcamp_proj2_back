@@ -21,6 +21,7 @@ AppDataSource.initialize()
 
 const indexRouter = require('./routes/indexRouter');
 const authRouter = require('./routes/kakaoAuthRouter');
+const planRouter = require('./routes/planRouter');
 const usersRouter = require('./routes/userRouter');
 
 const app = express();
@@ -38,6 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth/kakao', authRouter);
+app.use('/plans', planRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req: Request, res: Response, next: NextFunction) {

@@ -25,6 +25,8 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
     'unused-imports/no-unused-imports': 'warn',
+    '@typescript-eslint/strict-boolean-expressions': 'warn',
+    '@typescript-eslint/explicit-function-return-type': 'off',
     'import/order': [
       'warn',
       {
