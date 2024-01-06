@@ -11,7 +11,7 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
     "sourceMap": true,
     "downlevelIteration": true,
-    "paths": {"*": ["node_modules/*"]},
+    "paths": {"*": ["node_modules/*"], "@src/*": ["src/*"]},
     "noImplicitAny": true,
     "emitDecoratorMetadata": true /* typeorm */,
     "experimentalDecorators": true /* typeorm */,
@@ -19,6 +19,6 @@
     "removeComments": false /* for swagger */,
     "declaration": true
   },
-  "include": ["src/**/*", "."],
+  "include": ["src/**/*", ".eslintrc.js"],
   "exclude": ["node_modules"]
 }

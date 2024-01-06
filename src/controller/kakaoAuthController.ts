@@ -1,5 +1,5 @@
 import {type Request, type Response} from 'express';
-import * as kakaoAuthService from '../service/kakaoAuthService';
+import * as kakaoAuthService from '@src/service/kakaoAuthService';
 import {
   type KakaoSignupRequest,
   type KakaoLoginRequest,

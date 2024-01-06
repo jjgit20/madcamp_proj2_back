@@ -1,5 +1,9 @@
 module.exports = {
-  extends: ['standard-with-typescript', 'plugin:react/recommended', 'prettier'],
+  extends: [
+    'standard-with-typescript',
+    'plugin:react/recommended',
+    'plugin:prettier/recommended',
+  ],
   overrides: [
     {
       env: {

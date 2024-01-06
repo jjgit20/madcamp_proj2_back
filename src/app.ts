@@ -1,6 +1,6 @@
 import './env';
-import {AppDataSource} from './AppDataSource';
 import {type Request, type Response, type NextFunction} from 'express';
+import {AppDataSource} from './AppDataSource';
 
 const createError = require('http-errors');
 const cors = require('cors');
