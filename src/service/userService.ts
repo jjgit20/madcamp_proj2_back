@@ -27,26 +27,50 @@ export const getUser = async (userId: number) => {
 };
 
 export const getUserPlans = async (
+  tokenUserId: number,
   userId: number,
   page: number,
   limit: number,
 ) => {
-  const plans = await planRepository.find({
-    where: {isPublic: true, userId},
-    relations: ['userId', 'forks', 'likes'],
-    order: {planId: 'ASC'},
-    skip: page * 25,
-    take: limit,
-    select: [
-      'planId',
-      'country',
-      'city',
-      'rating',
-      'forks',
-      'likes',
-      'userId',
-      'image',
-    ],
-  });
+  let plans;
+  if (userId === tokenUserId) {
+    plans = await planRepository.find({
+      where: {userId},
+      relations: ['userId', 'forks', 'likes'],
+      order: {planId: 'ASC'},
+      skip: page * 25,
+      take: limit,
+      select: [
+        'planId',
+        'country',
+        'city',
+        'rating',
+        'forks',
+        'likes',
+        'userId',
+        'image',
+        'isPublic',
+      ],
+    });
+  } else {
+    plans = await planRepository.find({
+      where: {isPublic: true, userId},
+      relations: ['userId', 'forks', 'likes'],
+      order: {planId: 'ASC'},
+      skip: page * 25,
+      take: limit,
+      select: [
+        'planId',
+        'country',
+        'city',
+        'rating',
+        'forks',
+        'likes',
+        'userId',
+        'image',
+        'isPublic',
+      ],
+    });
+  }
   return plans;
 };

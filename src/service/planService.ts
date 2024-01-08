@@ -1,3 +1,4 @@
+import {uploadImage} from '../cloud/cloudFileUploader';
 import {type PlanModifyDto, type PlanCreateDto} from '../dto/planDto';
 import {Plan} from '../entity/plan.entity';
 import {planRepository} from '../repository';
@@ -45,7 +46,17 @@ export const getOnePlan = async (planId: number) => {
   return plan;
 };
 
-export const createPlan = async (plan: PlanCreateDto) => {
+export const createPlan = async (
+  tokenUserId: number,
+  plan: PlanCreateDto,
+  file: Express.Multer.File | undefined,
+) => {
+  if (file !== undefined) {
+    const imageUrl = await uploadImage(tokenUserId, file);
+    plan.image = imageUrl;
+    plan.userId = tokenUserId;
+  }
+
   const newPlan = planRepository.create(plan);
   const savedPlan: PlanCreateDto = await planRepository.save(newPlan);
   return savedPlan;
@@ -64,10 +75,22 @@ export const modifyPlanPublic = async (planId: number) => {
   //   .execute();
 };
 
-export const modifyPlan = async (planId: number, planModify: PlanModifyDto) => {
+export const modifyPlan = async (
+  tokenUserId: number,
+  planId: number,
+  planModify: PlanModifyDto,
+  file: Express.Multer.File | undefined,
+) => {
+  if (file !== undefined) {
+    const imageUrl = await uploadImage(tokenUserId, file);
+    planModify.image = imageUrl;
+  }
+
   const updateQuery = planRepository.createQueryBuilder('plan').update(Plan);
   Object.keys(planModify).forEach(key => {
     updateQuery.set({[key]: () => planModify[key as keyof PlanModifyDto]});
   });
   await updateQuery.where('planId = :planId', {planId}).execute();
+  const plan = await planRepository.findOne({where: {planId}});
+  return plan;
 };

@@ -21,7 +21,12 @@ export const getUserPlans = async (
     const userId = parseInt(req.params.userId);
     const page = parseInt(req.query.page as string) || 0;
     const limit = parseInt(req.query.limit as string) || 50;
-    const planResponse = await userService.getUserPlans(userId, page, limit);
+    const planResponse = await userService.getUserPlans(
+      (req as any).user?.userId as number,
+      userId,
+      page,
+      limit,
+    );
     res.json(planResponse);
   } catch (error) {
     console.error(error);
