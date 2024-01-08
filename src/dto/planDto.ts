@@ -18,6 +18,7 @@ export interface PlanCreateDto {
   selfReview: string;
   forks: Fork[];
   isPublic: boolean;
+  isComplete: boolean;
   image: string;
 }
 

@@ -9,28 +9,51 @@ const upload = multer({storage});
 
 const router = express.Router();
 
-router.get('/', planController.getPlans as RequestHandler); // tested
+router.get('/', planController.getPlans as RequestHandler);
+router.get(
+  '/:planId',
+  authenticate as RequestHandler,
+  planController.getOnePlan as RequestHandler,
+);
+
 router.post(
   '/',
   authenticate as RequestHandler,
   upload.single('image'),
   planController.createPlan as RequestHandler,
 );
-router.get(
-  '/:planId',
-  authenticate as RequestHandler,
-  planController.getOnePlan as RequestHandler,
-); // tested
 router.patch(
   '/:planId',
   authenticate as RequestHandler,
+  upload.single('image'),
   planController.modifyPlan as RequestHandler,
 );
+router.delete(
+  '/:planId',
+  authenticate as RequestHandler,
+  planController.deletePlan as RequestHandler,
+);
+
 router.patch(
   '/:planId/isPublic',
   authenticate as RequestHandler,
-  upload.single('image'),
   planController.modifyPlanPublic as RequestHandler,
+);
+router.patch(
+  '/:planId/isComplete',
+  authenticate as RequestHandler,
+  planController.modifyPlanComplete as RequestHandler,
+);
+
+router.post(
+  '/:planId/fork',
+  authenticate as RequestHandler,
+  planController.forkPlan as RequestHandler,
+);
+router.patch(
+  '/:planId/like',
+  authenticate as RequestHandler,
+  planController.likePlan as RequestHandler,
 );
 
 module.exports = router;

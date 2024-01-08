@@ -11,18 +11,19 @@ export const getPlans = async (req: Request, res: Response): Promise<void> => {
     res.json(planResponse);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Internal Server Error: getting all plans');
+    res.status(500).send('Internal Server Error: getPlans');
   }
 };
 
 export const getOnePlan = async (req: Request, res: Response) => {
   try {
+    const tokenUserId = (req as any).user?.userId as number;
     const planId = parseInt(req.params.planId);
-    const planResponse = await planService.getOnePlan(planId);
+    const planResponse = await planService.getOnePlan(tokenUserId, planId);
     res.json(planResponse);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Internal Server Error: getting one plan');
+    res.status(500).send('Internal Server Error: getOnePlan');
   }
 };
 
@@ -35,17 +36,7 @@ export const createPlan = async (req: Request, res: Response) => {
     res.json(planResponse);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Internal Server Error: creating one plan');
-  }
-};
-
-export const modifyPlanPublic = async (req: Request, res: Response) => {
-  try {
-    const planId = parseInt(req.params.planId);
-    await planService.modifyPlanPublic(planId);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error: modifyPlanPublic');
+    res.status(500).send('Internal Server Error: createPlan');
   }
 };
 
@@ -65,5 +56,74 @@ export const modifyPlan = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error: modifyPlan');
+  }
+};
+
+export const deletePlan = async (req: Request, res: Response) => {
+  try {
+    const tokenUserId = (req as any).user?.userId as number;
+    const planId = parseInt(req.params.planId);
+    const planDeleteResponse = await planService.deletePlan(
+      tokenUserId,
+      planId,
+    );
+    res.json(planDeleteResponse);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error: deletePlan');
+  }
+};
+
+export const modifyPlanPublic = async (req: Request, res: Response) => {
+  try {
+    const tokenUserId = (req as any).user?.userId as number;
+    const planId = parseInt(req.params.planId);
+    const planModifyResponse = await planService.modifyPlanPublic(
+      tokenUserId,
+      planId,
+    );
+    res.json(planModifyResponse);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error: modifyPlanPublic');
+  }
+};
+
+export const modifyPlanComplete = async (req: Request, res: Response) => {
+  try {
+    const tokenUserId = (req as any).user?.userId as number;
+    const planId = parseInt(req.params.planId);
+    const planModifyResponse = await planService.modifyPlanComplete(
+      tokenUserId,
+      planId,
+    );
+    res.json(planModifyResponse);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error: modifyPlanComplete');
+  }
+};
+
+export const forkPlan = async (req: Request, res: Response) => {
+  try {
+    const tokenUserId = (req as any).user?.userId as number;
+    const planId = parseInt(req.params.planId);
+    const planForkResponse = await planService.forkPlan(tokenUserId, planId);
+    res.json(planForkResponse);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error: modifyPlanComplete');
+  }
+};
+
+export const likePlan = async (req: Request, res: Response) => {
+  try {
+    const tokenUserId = (req as any).user?.userId as number;
+    const planId = parseInt(req.params.planId);
+    const planLikeResponse = await planService.likePlan(tokenUserId, planId);
+    res.json(planLikeResponse);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error: modifyPlanComplete');
   }
 };

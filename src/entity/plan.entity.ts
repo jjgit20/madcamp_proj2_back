@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -18,6 +19,7 @@ export class Plan {
   planId: number;
 
   @ManyToOne(() => User, user => user.plans)
+  @JoinColumn({name: 'userId'})
   userId: number;
 
   @Column({type: 'timestamp'})
@@ -44,7 +46,7 @@ export class Plan {
   @Column({default: 0, nullable: true})
   cash: number;
 
-  @OneToMany(() => PlanPlace, planPlace => planPlace.planPlaceId)
+  @OneToMany(() => PlanPlace, planPlace => planPlace.plan)
   places: PlanPlace[];
 
   @Column({nullable: true})
@@ -59,12 +61,15 @@ export class Plan {
   @Column({default: false})
   isPublic: boolean;
 
+  @Column({default: false})
+  isComplete: boolean;
+
   @Column({nullable: true})
   image: string;
 
-  @OneToMany(() => Fork, fork => fork.giver)
+  @OneToMany(() => Fork, fork => fork.plan)
   forks: Fork[];
 
-  @OneToMany(() => Like, like => like.giver)
+  @OneToMany(() => Like, like => like.plan)
   likes: Like[];
 }

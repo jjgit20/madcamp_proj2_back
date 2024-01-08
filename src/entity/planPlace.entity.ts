@@ -1,7 +1,6 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   Timestamp,
@@ -15,12 +14,10 @@ export class PlanPlace {
   @PrimaryGeneratedColumn()
   planPlaceId: number;
 
-  @ManyToOne(() => Plan, plan => plan.planId)
-  @JoinColumn({name: 'planId'})
+  @ManyToOne(() => Plan, plan => plan.places)
   plan: Plan;
 
-  @ManyToOne(() => Place, place => place.placeId)
-  @JoinColumn({name: 'placeId'})
+  @ManyToOne(() => Place, place => place.plans)
   place: Place;
 
   @Column({type: 'timestamp'})

@@ -13,6 +13,6 @@ export class Place {
   @Column()
   longitude: number;
 
-  @OneToMany(() => PlanPlace, planPlace => planPlace.planPlaceId)
+  @OneToMany(() => PlanPlace, planPlace => planPlace.place)
   plans: PlanPlace[];
 }

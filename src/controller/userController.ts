@@ -18,11 +18,12 @@ export const getUserPlans = async (
   res: Response,
 ): Promise<void> => {
   try {
+    const tokenUserId = (req as any).user?.userId as number;
     const userId = parseInt(req.params.userId);
     const page = parseInt(req.query.page as string) || 0;
     const limit = parseInt(req.query.limit as string) || 50;
     const planResponse = await userService.getUserPlans(
-      (req as any).user?.userId as number,
+      tokenUserId,
       userId,
       page,
       limit,
