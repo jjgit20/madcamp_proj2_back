@@ -42,12 +42,12 @@ export const getUserPlans = async (
       take: limit,
       select: [
         'planId',
+        'startDate',
+        'endDate',
         'country',
         'city',
-        'rating',
         'forks',
         'likes',
-        'userId',
         'image',
         'isPublic',
       ],
@@ -59,17 +59,7 @@ export const getUserPlans = async (
       order: {planId: 'ASC'},
       skip: page * 25,
       take: limit,
-      select: [
-        'planId',
-        'country',
-        'city',
-        'rating',
-        'forks',
-        'likes',
-        'userId',
-        'image',
-        'isPublic',
-      ],
+      select: ['planId', 'country', 'forks', 'likes', 'image'],
     });
   }
   return plans;

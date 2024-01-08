@@ -1,25 +1,10 @@
-import * as path from 'path';
-import {DataSource} from 'typeorm';
-
-import {Plan} from './entity/plan.entity';
-import * as planService from './service/planService';
-
-const AppDataSource = new DataSource({
-  type: 'mysql',
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  username: process.env.DB_USER,
-  password: process.env.DB_PWD,
-  database: process.env.DB_DATABASE,
-  entities: [path.join(__dirname, '/entity/*.ts')],
-  synchronize: process.env.MIGRATIONS === 'true', // Indicates if database schema should be auto created on every application launch. Be careful with this option and don't use this in production - otherwise you can lose production data.
-});
-
-const planRepository = AppDataSource.getRepository(Plan);
+import {type PlaceCreateDto} from './dto/placeDto';
+import {type PlanCreateDto} from './dto/planDto';
+import {placeRepository, planRepository, userRepository} from './repository';
 
 const userInit1 = {
   username: 'tester',
-  kakaoId: 3258107781,
+  kakaoId: '3258107781',
   password: 'password',
   nickname: '김현아',
   email: 'kimhyuna0321@gmail.com',
@@ -27,49 +12,82 @@ const userInit1 = {
     'https://k.kakaocdn.net/dn/Yza2R/btss3Vj963e/pOZiCpWBiiGtTQpkQ6tKe0/img_640x640.jpg',
 };
 
-const planInit1 = {
-  userId: 1,
-  startDate: 1704546310,
-  endDate: 1704546310,
-  country: '일본',
-  city: '오사카',
-  flightStartDate: 1704546310,
-  flightEndDate: 1704546310,
-  airport: '??',
-  cash: 1239021,
-  places: [],
-  title: '나의 일본 여행기',
-  rating: 1,
-  selfReview: '정말 좋았음, 강추',
-  forkCount: 1000000,
-  public: true,
+const userInit2 = {
+  username: 'tester2',
+  kakaoId: '3258107782',
+  password: 'password',
+  nickname: '김하나',
+  email: 'kimhyuna0321@gmail.com',
   image:
-    'https://img.kbs.co.kr/kbs/620/news.kbs.co.kr/data/fckeditor/new/image/2021/05/07/314691620354493423.jpg',
+    'https://k.kakaocdn.net/dn/Yza2R/btss3Vj963e/pOZiCpWBiiGtTQpkQ6tKe0/img_640x640.jpg',
 };
 
-const planInit2 = {
+const planInit1: PlanCreateDto = {
   userId: 1,
-  startDate: 1704546310,
-  endDate: 1704546310,
+  startDate: new Date(),
+  endDate: new Date(),
   country: '일본',
   city: '오사카',
-  flightStartDate: 1704546310,
-  flightEndDate: 1704546310,
+  // flightStartDate: new Date(),
+  // flightEndDate: new Date(),
+  season: '',
+  topic: '',
   airport: '??',
   cash: 1239021,
   places: [],
   title: '나의 일본 여행기',
   rating: 1,
   selfReview: '정말 좋았음, 강추',
-  forkCount: 1000000,
-  public: true,
+  image: 'https://www.japan-guide.com/thumb/XYZeXYZe2157_1680.jpg',
+};
+
+const planInit2: PlanCreateDto = {
+  ...planInit1,
+  startDate: new Date('2022-11-12'),
+  endDate: new Date('2022-11-20'),
   image:
-    'https://contents.verygoodtour.com/event/2023/12/1215_vietnam/mobile/images/cover1.jpg',
+    'https://travel.rakuten.com/contents/sites/contents/files/styles/max_1300x1300/public/2023-05/7-day-itinerary-osaka_key.jpg?itok=kX6hSTDV',
+};
+
+const planInit3: PlanCreateDto = {
+  ...planInit2,
+  image:
+    'https://s1.it.atcdn.net/wp-content/uploads/2019/09/IT_LandingPage_HeaderImage_Austria_2019_Sept.jpg',
+};
+
+const placeInit1: PlaceCreateDto = {
+  latitude: 35.553333,
+  longitude: 139.781113,
+  placeType: 'TRANSPORT',
+  name: '하네다 공항',
+};
+
+const placeInit2: PlaceCreateDto = {
+  latitude: 35.6268278,
+  longitude: 139.88497817078,
+  placeType: 'LANDMARK',
+  name: '디즈니씨',
 };
 
 export const initPlanData = async () => {
-  await planService.createPlan(planInit1);
-  await planService.createPlan(planInit2);
-};
+  let newUser = userRepository.create(userInit1);
+  let savedUser = await userRepository.save(newUser);
 
-initPlanData();
+  newUser = userRepository.create(userInit2);
+  savedUser = await userRepository.save(newUser);
+
+  let newPlan = planRepository.create(planInit1);
+  let savedPlan: PlanCreateDto = await planRepository.save(newPlan);
+
+  newPlan = planRepository.create(planInit2);
+  savedPlan = await planRepository.save(newPlan);
+
+  newPlan = planRepository.create(planInit3);
+  savedPlan = await planRepository.save(newPlan);
+
+  let newPlace = placeRepository.create(placeInit1);
+  let savedPlace = await placeRepository.save(newPlace);
+
+  newPlace = placeRepository.create(placeInit2);
+  savedPlace = await placeRepository.save(newPlace);
+};

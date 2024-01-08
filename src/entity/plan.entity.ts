@@ -5,7 +5,6 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  Timestamp,
 } from 'typeorm';
 
 import {Fork} from './fork.entity';
@@ -23,10 +22,10 @@ export class Plan {
   userId: number;
 
   @Column({type: 'timestamp'})
-  startDate: Timestamp;
+  startDate: Date;
 
   @Column({type: 'timestamp'})
-  endDate: Timestamp;
+  endDate: Date;
 
   @Column({nullable: true})
   country: string;
@@ -34,11 +33,17 @@ export class Plan {
   @Column({nullable: true})
   city: string;
 
-  @Column({type: 'timestamp', nullable: true})
-  flightStartDate: Timestamp;
+  // @Column({type: 'timestamp', nullable: true})
+  // flightStartDate: Date;
 
-  @Column({type: 'timestamp', nullable: true})
-  flightEndDate: Timestamp;
+  // @Column({type: 'timestamp', nullable: true})
+  // flightEndDate: Date;
+
+  @Column({nullable: true})
+  season: string;
+
+  @Column({nullable: true})
+  topic: string;
 
   @Column({nullable: true})
   airport: string;

@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  Timestamp,
-} from 'typeorm';
+import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 
 import {Place} from './place.entity';
 import {Plan} from './plan.entity';
@@ -21,5 +15,11 @@ export class PlanPlace {
   place: Place;
 
   @Column({type: 'timestamp'})
-  visitTime: Timestamp;
+  visitDate: Date;
+
+  @Column()
+  orderInDay: number;
+
+  @Column()
+  money: number;
 }

@@ -1,6 +1,7 @@
 import './env';
 import {type Request, type Response, type NextFunction} from 'express';
 
+import {initPlanData} from './AppDataInit';
 import {AppDataSource} from './AppDataSource';
 
 const cookieParser = require('cookie-parser');
@@ -13,7 +14,17 @@ const path = require('path');
 // connect to db
 AppDataSource.initialize()
   .then(() => {
-    console.log('Data Source has been initialized!');
+    if (process.env.MIGRATIONS === 'true') {
+      initPlanData()
+        .then(() => {
+          console.log('Data Source has been MIGRATED!');
+        })
+        .catch(err => {
+          console.error('Data Source migrations had the error: ', err);
+        });
+    } else {
+      console.log('Data Source has been INITIALIZED!');
+    }
   })
   .catch(err => {
     console.error('Error during Data Source initialization:', err);

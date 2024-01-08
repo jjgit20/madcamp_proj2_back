@@ -124,7 +124,8 @@ export const modifyPlanPublic = async (tokenUserId: number, planId: number) => {
   });
   if (
     plan !== null &&
-    (plan.userId as unknown as User).userId === tokenUserId
+    (plan.userId as unknown as User).userId === tokenUserId &&
+    plan.isComplete
   ) {
     await planRepository.update({planId}, {isPublic: !plan.isPublic});
     const updatedPlan = await planRepository.findOne({where: {planId}});
