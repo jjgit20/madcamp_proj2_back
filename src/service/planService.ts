@@ -28,6 +28,7 @@ export const getPlans = async (page: number, limit: number) => {
       'userId',
       'forks',
       'likes',
+      'cash',
     ],
   });
   return plans;
@@ -36,7 +37,7 @@ export const getPlans = async (page: number, limit: number) => {
 export const getOnePlan = async (tokenUserId: number, planId: number) => {
   const plan = await planRepository.findOne({
     where: {planId},
-    relations: ['userId', 'forks', 'likes', 'places'],
+    relations: ['userId', 'forks', 'likes', 'places', 'places.place'],
   });
   if (
     plan !== null &&
@@ -53,6 +54,7 @@ export const createPlan = async (
   plan: PlanCreateDto,
   file: Express.Multer.File | undefined,
 ) => {
+  console.log('fileee', file);
   if (file !== undefined) {
     const imageUrl = await uploadImage(tokenUserId, file);
     plan.image = imageUrl;

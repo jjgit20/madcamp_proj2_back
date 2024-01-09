@@ -29,6 +29,7 @@ export const getOnePlan = async (req: Request, res: Response) => {
 
 export const createPlan = async (req: Request, res: Response) => {
   try {
+    console.log(req.file);
     const tokenUserId = (req as any).user?.userId as number;
     const plan: PlanCreateDto = req.body;
     const file = req.file;

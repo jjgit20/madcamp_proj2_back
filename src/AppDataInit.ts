@@ -115,7 +115,7 @@ export const initPlanData = async () => {
   newPlan = planRepository.create(planInit4);
   savedPlan = await planRepository.save(newPlan);
 
-  newPlan = planRepository.create(planInit4);
+  newPlan = planRepository.create(planInit5);
   savedPlan = await planRepository.save(newPlan);
 
   let newPlace = placeRepository.create(placeInit1);

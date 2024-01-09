@@ -32,6 +32,7 @@ AppDataSource.initialize()
 
 const indexRouter = require('./routes/indexRouter');
 const authRouter = require('./routes/kakaoAuthRouter');
+const placeRouter = require('./routes/placeRouter');
 const planRouter = require('./routes/planRouter');
 const usersRouter = require('./routes/userRouter');
 
@@ -51,6 +52,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth/kakao', authRouter);
 app.use('/plans', planRouter);
+app.use('/places', placeRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req: Request, res: Response, next: NextFunction) {

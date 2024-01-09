@@ -5,7 +5,12 @@ import * as planController from '../controller/planController';
 import {authenticate} from '../middleware/tokenAuth';
 
 const storage = multer.memoryStorage();
-const upload = multer({storage});
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 1024 * 1024 * 5, // 5 MB (adjust as needed)
+  },
+});
 
 const router = express.Router();
 
@@ -19,13 +24,13 @@ router.get(
 router.post(
   '/',
   authenticate as RequestHandler,
-  upload.single('image'),
+  upload.single('file'),
   planController.createPlan as RequestHandler,
 );
 router.patch(
   '/:planId',
   authenticate as RequestHandler,
-  upload.single('image'),
+  upload.single('file'),
   planController.modifyPlan as RequestHandler,
 );
 router.delete(
