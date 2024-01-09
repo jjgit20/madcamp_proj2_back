@@ -22,6 +22,16 @@ const userInit2 = {
     'https://k.kakaocdn.net/dn/Yza2R/btss3Vj963e/pOZiCpWBiiGtTQpkQ6tKe0/img_640x640.jpg',
 };
 
+const userInit3 = {
+  username: 'tester2',
+  kakaoId: '3277747301',
+  password: 'password',
+  nickname: '장지오',
+  email: 'aa@gmail.com',
+  image:
+    'https://k.kakaocdn.net/dn/Yza2R/btss3Vj963e/pOZiCpWBiiGtTQpkQ6tKe0/img_640x640.jpg',
+};
+
 const planInit1: PlanCreateDto = {
   userId: 1,
   startDate: new Date(),
@@ -55,6 +65,20 @@ const planInit3: PlanCreateDto = {
     'https://s1.it.atcdn.net/wp-content/uploads/2019/09/IT_LandingPage_HeaderImage_Austria_2019_Sept.jpg',
 };
 
+const planInit4: PlanCreateDto = {
+  ...planInit2,
+  userId: 3,
+  image:
+    'https://travel.rakuten.com/contents/sites/contents/files/styles/max_1300x1300/public/2023-05/7-day-itinerary-osaka_key.jpg?itok=kX6hSTDV',
+};
+
+const planInit5: PlanCreateDto = {
+  ...planInit2,
+  userId: 3,
+  image:
+    'https://s1.it.atcdn.net/wp-content/uploads/2019/09/IT_LandingPage_HeaderImage_Austria_2019_Sept.jpg',
+};
+
 const placeInit1: PlaceCreateDto = {
   latitude: 35.553333,
   longitude: 139.781113,
@@ -76,6 +100,9 @@ export const initPlanData = async () => {
   newUser = userRepository.create(userInit2);
   savedUser = await userRepository.save(newUser);
 
+  newUser = userRepository.create(userInit3);
+  savedUser = await userRepository.save(newUser);
+
   let newPlan = planRepository.create(planInit1);
   let savedPlan: PlanCreateDto = await planRepository.save(newPlan);
 
@@ -83,6 +110,12 @@ export const initPlanData = async () => {
   savedPlan = await planRepository.save(newPlan);
 
   newPlan = planRepository.create(planInit3);
+  savedPlan = await planRepository.save(newPlan);
+
+  newPlan = planRepository.create(planInit4);
+  savedPlan = await planRepository.save(newPlan);
+
+  newPlan = planRepository.create(planInit4);
   savedPlan = await planRepository.save(newPlan);
 
   let newPlace = placeRepository.create(placeInit1);
