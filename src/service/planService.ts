@@ -1,11 +1,18 @@
-import {type LikeCreateDto, type ForkCreateDto} from 'src/dto/forkLikeDto';
+import {type PlanPlace} from 'src/entity/planPlace.entity';
 
 import {uploadImage} from '../cloud/cloudFileUploader';
-import {type PlanModifyDto, type PlanCreateDto} from '../dto/planDto';
+import {type LikeCreateDto, type ForkCreateDto} from '../dto/forkLikeDto';
+import {
+  type PlanModifyDto,
+  type PlanCreateDto,
+  type PlanModifyQueryDto,
+} from '../dto/planDto';
+import {type Plan} from '../entity/plan.entity';
 import {type User} from '../entity/user.entity';
 import {
   forkRepository,
   likeRepository,
+  planPlaceRepository,
   planRepository,
   userRepository,
 } from '../repository';
@@ -29,6 +36,8 @@ export const getPlans = async (page: number, limit: number) => {
       'forks',
       'likes',
       'cash',
+      'startDate',
+      'endDate',
     ],
   });
   return plans;
@@ -54,15 +63,26 @@ export const createPlan = async (
   plan: PlanCreateDto,
   file: Express.Multer.File | undefined,
 ) => {
-  console.log('fileee', file);
+  if (plan.image === 'null') {
+    plan.image = undefined;
+  }
+
   if (file !== undefined) {
     const imageUrl = await uploadImage(tokenUserId, file);
-    plan.image = imageUrl;
+    if (imageUrl !== 'null') {
+      plan.image = imageUrl;
+    }
   }
 
   plan.userId = tokenUserId;
-  const newPlan = planRepository.create(plan);
-  const savedPlan: PlanCreateDto = await planRepository.save(newPlan);
+  const startDate = new Date(parseInt(plan.startDate as string));
+  const endDate = new Date(parseInt(plan.endDate as string));
+  const newPlan = planRepository.create({
+    ...plan,
+    startDate,
+    endDate,
+  });
+  const savedPlan = await planRepository.save(newPlan);
   return savedPlan;
 };
 
@@ -72,9 +92,15 @@ export const modifyPlan = async (
   planModify: PlanModifyDto,
   file: Express.Multer.File | undefined,
 ) => {
+  if (planModify.image === 'null') {
+    planModify.image = undefined;
+  }
+
   if (file !== undefined) {
     const imageUrl = await uploadImage(tokenUserId, file);
-    planModify.image = imageUrl;
+    if (imageUrl !== 'null') {
+      planModify.image = imageUrl;
+    }
   }
 
   const plan = await planRepository.findOne({
@@ -92,11 +118,69 @@ export const modifyPlan = async (
     (plan.userId as unknown as User).userId === tokenUserId &&
     !plan.isComplete
   ) {
-    await planRepository.update({planId}, planModify);
+    const startDate = new Date(parseInt(planModify.startDate as string));
+    const endDate = new Date(parseInt(planModify.endDate as string));
+    const allowedProperties = [
+      'startDate',
+      'endDate',
+      'country',
+      'city',
+      'flightStartDate',
+      'flightEndDate',
+      'airport',
+      'cash',
+      'title',
+      'rating',
+      'selfReview',
+      'image',
+    ];
+    const filteredPlanModify: any = {};
+
+    Object.keys(planModify).forEach(key => {
+      if (
+        allowedProperties.includes(key as keyof Plan) &&
+        planModify[key as keyof PlanModifyDto] !== undefined &&
+        planModify[key as keyof PlanModifyDto] !== 'null'
+      ) {
+        if (key === 'startDate') {
+          filteredPlanModify.startDate = new Date(
+            parseInt(planModify[key] as string),
+          );
+        } else if (key === 'endDate') {
+          filteredPlanModify.endDate = new Date(
+            parseInt(planModify[key] as string),
+          );
+        } else {
+          filteredPlanModify[key as keyof PlanModifyDto] = planModify[
+            key as keyof PlanModifyDto
+          ] as any;
+        }
+      }
+    });
+
+    await planRepository.update(
+      {planId},
+      filteredPlanModify as PlanModifyQueryDto,
+    );
     const updatedPlan = await planRepository.findOne({
       where: {planId},
       relations: ['userId'],
     });
+
+    // update planplaces
+    const planPlaces = planModify.places;
+    if (planPlaces) {
+      for (const planPlace of JSON.parse(planPlaces) as PlanPlace[]) {
+        await planPlaceRepository.update(
+          {planPlaceId: planPlace.planPlaceId},
+          planPlace,
+        );
+      }
+    }
+
+    // did I like it?
+    // const myLike
+
     return updatedPlan;
   } else {
     throw new Error('Unauthorized modifyPlan');
@@ -108,10 +192,14 @@ export const deletePlan = async (tokenUserId: number, planId: number) => {
     where: {planId},
     relations: ['userId'],
   });
+  const planPlaces = await planPlaceRepository.find({where: {plan: {planId}}});
   if (
     plan !== null &&
     (plan.userId as unknown as User).userId === tokenUserId
   ) {
+    for (const planPlace of planPlaces) {
+      await planPlaceRepository.delete({planPlaceId: planPlace.planPlaceId});
+    }
     await planRepository.delete({planId});
     return plan;
   } else {

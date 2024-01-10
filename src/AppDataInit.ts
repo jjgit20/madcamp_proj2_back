@@ -19,7 +19,7 @@ const userInit2 = {
   nickname: '김하나',
   email: 'kimhyuna0321@gmail.com',
   image:
-    'https://k.kakaocdn.net/dn/Yza2R/btss3Vj963e/pOZiCpWBiiGtTQpkQ6tKe0/img_640x640.jpg',
+    'https://i.pinimg.com/564x/7e/66/84/7e6684f737c9163afad557191d0fcab1.jpg',
 };
 
 const userInit3 = {
