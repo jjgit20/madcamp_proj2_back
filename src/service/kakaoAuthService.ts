@@ -77,3 +77,28 @@ export const signup = async (
     // image: savedUser.image,
   };
 };
+
+export const refreshToken = async (tokenUserId: number) => {
+  const user = await userRepository.findOne({
+    where: {
+      userId: tokenUserId,
+    },
+  });
+  const token = jwt.sign(
+    {
+      userId: user?.userId,
+      username: user?.username,
+      nickname: user?.nickname,
+      email: user?.email,
+      image: user?.image,
+    },
+    privateKey,
+    {algorithm: 'RS256', expiresIn: '30d'},
+  );
+
+  return {
+    signedUp: user !== null,
+    userId: user?.userId,
+    token,
+  };
+};

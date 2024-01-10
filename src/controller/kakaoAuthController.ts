@@ -34,3 +34,18 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     res.status(500).send('Internal Server Error: signup');
   }
 };
+
+export const refreshToken = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const tokenUserId = (req as any).user?.userId as number;
+    const refreshTokenResponse =
+      await kakaoAuthService.refreshToken(tokenUserId);
+    res.json(refreshTokenResponse);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error: refreshToken');
+  }
+};
