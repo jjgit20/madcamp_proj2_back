@@ -16,34 +16,62 @@ import {
   planRepository,
   userRepository,
 } from '../repository';
+import { Like } from 'typeorm';
 
 export const getPlans = async (
   tokenUserId: number,
   page: number,
   limit: number,
+  search: string
 ) => {
-  const plans = await planRepository.find({
-    where: {isPublic: true},
-    relations: ['userId', 'forks', 'likes', 'likes.giver'],
-    order: {planId: 'ASC'},
-    skip: page * 25,
-    take: limit,
-    select: [
-      'planId',
-      'country',
-      'city',
-      'rating',
-      'forks',
-      'likes',
-      'image',
-      'userId',
-      'forks',
-      'likes',
-      'cash',
-      'startDate',
-      'endDate',
-    ],
-  });
+  let plans;
+  if (search) {
+     plans = await planRepository.find({
+      where: {isPublic: true, country: Like(`%${search}%`) },
+      relations: ['userId', 'forks', 'likes', 'likes.giver'],
+      order: {planId: 'ASC'},
+      skip: page * 25,
+      take: limit,
+      select: [
+        'planId',
+        'country',
+        'city',
+        'rating',
+        'forks',
+        'likes',
+        'image',
+        'userId',
+        'forks',
+        'likes',
+        'cash',
+        'startDate',
+        'endDate',
+      ],
+    });
+  } else {
+     plans = await planRepository.find({
+      where: {isPublic: true},
+      relations: ['userId', 'forks', 'likes', 'likes.giver'],
+      order: {planId: 'ASC'},
+      skip: page * 25,
+      take: limit,
+      select: [
+        'planId',
+        'country',
+        'city',
+        'rating',
+        'forks',
+        'likes',
+        'image',
+        'userId',
+        'forks',
+        'likes',
+        'cash',
+        'startDate',
+        'endDate',
+      ],
+    });  
+  }
 
   // did I like it?
   const plansWithMyLikedStatus = plans.map(plan => {
