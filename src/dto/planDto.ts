@@ -17,6 +17,8 @@ export interface PlanCreateDto {
   rating: number;
   selfReview: string;
   image?: string;
+  isComplete?: boolean;
+  isPublic?: boolean;
 }
 
 export interface PlanModifyDto {
