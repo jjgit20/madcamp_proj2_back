@@ -6,6 +6,8 @@ import {
   OneToMany,
 } from 'typeorm';
 
+import {Fork} from './fork.entity';
+import {Like} from './like.entity';
 import {Plan} from './plan.entity';
 
 @Entity('tb_users')
@@ -37,4 +39,16 @@ export class User {
 
   @OneToMany(() => Plan, plan => plan.userId)
   plans: Plan[];
+
+  @OneToMany(() => Fork, fork => fork.receiver)
+  receivedForks: Fork[];
+
+  @OneToMany(() => Fork, fork => fork.giver)
+  givenForks: Fork[];
+
+  @OneToMany(() => Like, like => like.receiver)
+  receivedLikes: Like[];
+
+  @OneToMany(() => Like, like => like.giver)
+  givenLikes: Like[];
 }

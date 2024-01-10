@@ -7,12 +7,18 @@ export class Place {
   @PrimaryGeneratedColumn()
   placeId: number;
 
-  @Column()
+  @Column({type: 'double'})
   latitude: number;
 
-  @Column()
+  @Column({type: 'double'})
   longitude: number;
 
-  @OneToMany(() => PlanPlace, planPlace => planPlace.planPlaceId)
+  @Column()
+  placeType: string;
+
+  @Column()
+  name: string;
+
+  @OneToMany(() => PlanPlace, planPlace => planPlace.place)
   plans: PlanPlace[];
 }

@@ -5,3 +5,4 @@ build/
 *.crt
 *.key
 *.pem
+src/certs/
