@@ -8,8 +8,13 @@ export const getPlans = async (req: Request, res: Response): Promise<void> => {
     const tokenUserId = (req as any).user?.userId as number;
     const page = parseInt(req.query.page as string) || 0;
     const limit = parseInt(req.query.limit as string) || 50;
-    const search = req.query.search as string
-    const planResponse = await planService.getPlans(tokenUserId, page, limit, search);
+    const search = req.query.search as string;
+    const planResponse = await planService.getPlans(
+      tokenUserId,
+      page,
+      limit,
+      search,
+    );
     res.json(planResponse);
   } catch (error) {
     console.error(error);

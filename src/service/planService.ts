@@ -1,4 +1,5 @@
 import {type PlanPlace} from 'src/entity/planPlace.entity';
+import {Like} from 'typeorm';
 
 import {uploadImage} from '../cloud/cloudFileUploader';
 import {type LikeCreateDto, type ForkCreateDto} from '../dto/forkLikeDto';
@@ -16,18 +17,21 @@ import {
   planRepository,
   userRepository,
 } from '../repository';
-import { Like } from 'typeorm';
 
 export const getPlans = async (
   tokenUserId: number,
   page: number,
   limit: number,
-  search: string
+  search: string,
 ) => {
   let plans;
   if (search) {
-     plans = await planRepository.find({
-      where: [{isPublic: true, country: Like(`%${search}%`) },{isPublic: true, city: Like(`%${search}%`) },{isPublic: true, airport: Like(`%${search}%`) }],
+    plans = await planRepository.find({
+      where: [
+        {isPublic: true, country: Like(`%${search}%`)},
+        {isPublic: true, city: Like(`%${search}%`)},
+        {isPublic: true, airport: Like(`%${search}%`)},
+      ],
       relations: ['userId', 'forks', 'likes', 'likes.giver'],
       order: {planId: 'ASC'},
       skip: page * 25,
@@ -49,7 +53,7 @@ export const getPlans = async (
       ],
     });
   } else {
-     plans = await planRepository.find({
+    plans = await planRepository.find({
       where: {isPublic: true},
       relations: ['userId', 'forks', 'likes', 'likes.giver'],
       order: {planId: 'ASC'},
@@ -70,7 +74,7 @@ export const getPlans = async (
         'startDate',
         'endDate',
       ],
-    });  
+    });
   }
 
   // did I like it?
