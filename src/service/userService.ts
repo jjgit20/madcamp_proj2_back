@@ -36,7 +36,7 @@ export const getUserPlans = async (
   if (userId === tokenUserId) {
     plans = await planRepository.find({
       where: {userId},
-      relations: ['userId', 'forks', 'likes'],
+      relations: ['userId', 'forks', 'likes', 'likes.giver'],
       order: {planId: 'ASC'},
       skip: page * 25,
       take: limit,
@@ -55,12 +55,21 @@ export const getUserPlans = async (
   } else {
     plans = await planRepository.find({
       where: {isPublic: true, userId},
-      relations: ['userId', 'forks', 'likes'],
+      relations: ['userId', 'forks', 'likes', 'likes.giver'],
       order: {planId: 'ASC'},
       skip: page * 25,
       take: limit,
       select: ['planId', 'country', 'forks', 'likes', 'image'],
     });
   }
-  return plans;
+
+  // did I like it?
+  const plansWithMyLikedStatus = plans.map(plan => {
+    const didILikeIt = plan.likes.some(
+      like => like.giver.userId === tokenUserId,
+    );
+    return {...plan, didILikeIt};
+  });
+
+  return plansWithMyLikedStatus;
 };

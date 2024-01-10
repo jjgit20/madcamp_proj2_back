@@ -57,10 +57,10 @@ export class Plan {
   @Column({nullable: true})
   title: string;
 
-  @Column({nullable: true})
+  @Column({nullable: true, default: 5})
   rating: number;
 
-  @Column({nullable: true})
+  @Column({nullable: true, default: '리뷰를 작성해 보세요!'})
   selfReview: string;
 
   @Column({default: false})

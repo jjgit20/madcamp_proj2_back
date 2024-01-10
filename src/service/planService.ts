@@ -17,10 +17,14 @@ import {
   userRepository,
 } from '../repository';
 
-export const getPlans = async (page: number, limit: number) => {
+export const getPlans = async (
+  tokenUserId: number,
+  page: number,
+  limit: number,
+) => {
   const plans = await planRepository.find({
     where: {isPublic: true},
-    relations: ['userId', 'forks', 'likes'],
+    relations: ['userId', 'forks', 'likes', 'likes.giver'],
     order: {planId: 'ASC'},
     skip: page * 25,
     take: limit,
@@ -40,19 +44,40 @@ export const getPlans = async (page: number, limit: number) => {
       'endDate',
     ],
   });
-  return plans;
+
+  // did I like it?
+  const plansWithMyLikedStatus = plans.map(plan => {
+    const didILikeIt = plan.likes.some(
+      like => like.giver.userId === tokenUserId,
+    );
+    return {...plan, didILikeIt};
+  });
+
+  return plansWithMyLikedStatus;
 };
 
 export const getOnePlan = async (tokenUserId: number, planId: number) => {
   const plan = await planRepository.findOne({
     where: {planId},
-    relations: ['userId', 'forks', 'likes', 'places', 'places.place'],
+    relations: [
+      'userId',
+      'forks',
+      'likes',
+      'likes.giver',
+      'places',
+      'places.place',
+    ],
   });
   if (
     plan !== null &&
     ((plan.userId as unknown as User).userId === tokenUserId || plan.isPublic)
   ) {
-    return plan;
+    // did I like it?
+    const didILikeIt = plan.likes.some(
+      like => like.giver.userId === tokenUserId,
+    );
+
+    return {...plan, didILikeIt};
   } else {
     throw new Error('Unauthorized getOnePlan');
   }
@@ -178,9 +203,6 @@ export const modifyPlan = async (
       }
     }
 
-    // did I like it?
-    // const myLike
-
     return updatedPlan;
   } else {
     throw new Error('Unauthorized modifyPlan');
@@ -263,11 +285,43 @@ export const forkPlan = async (tokenUserId: number, planId: number) => {
     const newFork = forkRepository.create(fork);
     const savedFork: ForkCreateDto = await forkRepository.save(newFork);
 
-    const changedPlan = await planRepository.findOne({
+    const planCopy = await planRepository.findOne({
       where: {planId},
-      relations: ['userId', 'forks'],
+      relations: ['userId'],
     });
-    return changedPlan;
+    if (planCopy === null) {
+      return null;
+    }
+    const clonedPlan: Partial<Plan> = {...planCopy};
+    clonedPlan.userId = tokenUserId;
+    clonedPlan.planId = undefined;
+    clonedPlan.isComplete = false;
+    clonedPlan.isPublic = false;
+    clonedPlan.image = undefined;
+    clonedPlan.selfReview = undefined;
+    clonedPlan.rating = undefined;
+    const newPlan = planRepository.create(clonedPlan);
+    const savedPlan = await planRepository.save(newPlan);
+
+    const planPlaces = await planPlaceRepository.find({
+      where: {plan: {planId}},
+      relations: ['plan', 'place'],
+    });
+    for (const planPlace of planPlaces) {
+      const clonedPlanPlace: Partial<PlanPlace> = {...planPlace};
+      if (clonedPlanPlace.plan !== undefined) {
+        clonedPlanPlace.plan.planId = savedPlan.planId;
+      }
+      clonedPlanPlace.planPlaceId = undefined;
+      const newPlanPlace = planPlaceRepository.create(clonedPlanPlace);
+      const savedPlanPlace = await planPlaceRepository.save(newPlanPlace);
+    }
+
+    const updatedPlan = await planRepository.findOne({
+      where: {planId: savedPlan.planId},
+      relations: ['likes', 'forks', 'places'],
+    });
+    return updatedPlan;
   } else {
     throw new Error('Unauthorized forkPlan');
   }
@@ -285,8 +339,8 @@ export const likePlan = async (tokenUserId: number, planId: number) => {
   if (plan !== null && giver !== null) {
     const oldLike = await likeRepository
       .createQueryBuilder('like')
-      .leftJoinAndSelect('like.plan', 'plan') // Assuming there's a 'plan' property in the Fork entity
-      .leftJoinAndSelect('like.giver', 'giver') // Assuming there's a 'giver' property in the Fork entity
+      .leftJoinAndSelect('like.plan', 'plan')
+      .leftJoinAndSelect('like.giver', 'giver')
       .where('plan.planId = :planId', {planId})
       .andWhere('giver.userId = :tokenUserId', {tokenUserId})
       .getOne();

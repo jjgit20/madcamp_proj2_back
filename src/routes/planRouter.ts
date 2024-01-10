@@ -14,7 +14,11 @@ const upload = multer({
 
 const router = express.Router();
 
-router.get('/', planController.getPlans as RequestHandler);
+router.get(
+  '/',
+  authenticate as RequestHandler,
+  planController.getPlans as RequestHandler,
+);
 router.get(
   '/:planId',
   authenticate as RequestHandler,

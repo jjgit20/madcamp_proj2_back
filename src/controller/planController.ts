@@ -5,9 +5,10 @@ import * as planService from '../service/planService';
 
 export const getPlans = async (req: Request, res: Response): Promise<void> => {
   try {
+    const tokenUserId = (req as any).user?.userId as number;
     const page = parseInt(req.query.page as string) || 0;
     const limit = parseInt(req.query.limit as string) || 50;
-    const planResponse = await planService.getPlans(page, limit);
+    const planResponse = await planService.getPlans(tokenUserId, page, limit);
     res.json(planResponse);
   } catch (error) {
     console.error(error);
