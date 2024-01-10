@@ -27,7 +27,7 @@ export const getPlans = async (
   let plans;
   if (search) {
      plans = await planRepository.find({
-      where: {isPublic: true, country: Like(`%${search}%`) },
+      where: [{isPublic: true, country: Like(`%${search}%`) },{isPublic: true, city: Like(`%${search}%`) },{isPublic: true, airport: Like(`%${search}%`) }],
       relations: ['userId', 'forks', 'likes', 'likes.giver'],
       order: {planId: 'ASC'},
       skip: page * 25,
